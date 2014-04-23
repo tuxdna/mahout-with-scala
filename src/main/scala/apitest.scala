@@ -6,7 +6,7 @@ import org.apache.mahout.math.Matrix
 import Math.min
 import RLikeOps._
 
-/* Code take from here:
+/* Code taken from here:
  * http://weatheringthrutechdays.blogspot.com.br/2013/07/scala-dsl-for-mahout-in-core-linear.html
  */
 object apitest extends App {
