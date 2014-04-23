@@ -1,0 +1,5 @@
+
+how to incrementally build a matrix:
+ * row by row i.e. using many row vectors
+ * column by column, i.e. using many column vectors
+
