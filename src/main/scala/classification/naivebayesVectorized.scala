@@ -97,11 +97,8 @@ object naivebayesVectorized {
         val varianceVec = diffSquaredSumVec / count
 
         // standard deviation
-        val varianceByN: MahoutVector = varianceVec / count
-        val sigmaVec: MahoutVector = varianceByN.cloned
-        for (i <- 0 until varianceByN.size()) {
-          sigmaVec.setQuick(i, Math.sqrt(varianceByN(i)))
-        }
+        val sigmaVec = varianceVec.cloned
+        sigmaVec := ( (c, x) => Math.sqrt(x / count) )
 
         // println("Sigma: " + sigmaVec)
 

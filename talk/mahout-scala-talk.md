@@ -99,6 +99,11 @@ What are the stats almost everyone knows?
  * median
  * mode
 
+What about these?
+
+ * variance
+ * stardard deviation
+
 ---
 # Probability
 
@@ -116,6 +121,24 @@ What are the stats almost everyone knows?
 ( see the bindings )
 
 ---
+# Classification
+
+![Classification](http://www.holehouse.org/mlclass/06_Logistic_Regression_files/Image%20%5B23%5D.png)
+
+---
+# Clustering
+
+![Clustering](http://perception.csl.illinois.edu/gpca/introduction/clustering2.gif)
+
+---
+# Recommendation Algorithms
+
+![User Based](http://4.bp.blogspot.com/-06YIrYjJ1m4/TmBnFznqoxI/AAAAAAAAAks/HD2vhDWetdg/s1600/P1.png)
+
+![Item Based](http://2.bp.blogspot.com/-YEEM5PYuTAI/TmHGPmDYICI/AAAAAAAAAls/8VIm0-7PyYM/s1600/P1.png)
+
+
+---
 
 # Demo
 
@@ -124,7 +147,6 @@ What are the stats almost everyone knows?
 * Recommendation Algorithms
 
 ---
-
 # What upcoming in Mahout 1.0 ?
 
 * No further development in Map-Reduce ( Hadoop ) style, although existing algorithms will remain.
@@ -132,9 +154,6 @@ What are the stats almost everyone knows?
 * All the new algorithms will use Scala Math DSL which can be run seamlessly over Hadoop, Spark or anything else.
 
 ---
-
-
-
 # Questions
 
 ---
@@ -149,3 +168,8 @@ What are the stats almost everyone knows?
  * [Converting Similarity to Distance and vice-versa](http://stackoverflow.com/questions/4064630/how-do-i-convert-between-a-measure-of-similarity-and-a-measure-of-difference-di)
  * [Mahout Scala and Spark bindings](http://mahout.apache.org/users/sparkbindings/home.html)
  * [Multivariate Normal Distribution](http://en.wikipedia.org/wiki/Multivariate_normal_distribution)
+ * [Recommendation Engine](http://horicky.blogspot.in/2011/09/recommendation-engine.html)
+ * [Logistic Regression](http://www.holehouse.org/mlclass/06_Logistic_Regression.html)
+ * [Practical Machine Learning](http://www.mapr.com/practical-machine-learning)
+
+
