@@ -120,6 +120,8 @@ What are the stats almost everyone knows?
 # Demo
 
 * Naive Bayes Classifier
+* Clustering the Synthetic Control Data
+* Recommendation Algorithms
 
 ---
 
