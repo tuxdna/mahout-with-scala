@@ -165,7 +165,9 @@ Second method is to use PopulateDbPreferences
     0.7653784855122873
     [success] Total time: 8 s ...
 
-### SlopeOneExample
+### SlopeOneExample ( only with Mahout 0.7 and below )
+
+This doesn't work as of now
 
     $ sbt "run-main SlopeOneExample grouplens/ml-1m/ratings.dat"
     14/03/20 20:02:25 INFO file.FileDataModel: Creating FileDataModel for file /tmp/ratings.txt
