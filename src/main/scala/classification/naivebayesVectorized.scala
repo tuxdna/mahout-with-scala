@@ -40,12 +40,12 @@ object naivebayesVectorized {
       .map(_.split(",")).filter(_.length == 5) // accept only lines with 5 elements
       .foreach { elems =>
 
-        val v: MahoutVector = new DenseVector(5)
-        v.set(0, 1) // constant term
-        v.set(1, elems(0).toDouble) //Sepal.Length
-        v.set(2, elems(1).toDouble) //Sepal.Width
-        v.set(3, elems(2).toDouble) //Petal.Length
-        v.set(4, elems(3).toDouble) //Petal.Width
+        val v: MahoutVector = dvec(1,
+          elems(0).toDouble, //Sepal.Length
+          elems(1).toDouble, //Sepal.Width
+          elems(2).toDouble, //Petal.Length
+          elems(3).toDouble) //Petal.Width
+
         val category = elems(4)
         val categoryCode = dict.intern(category)
         categoryMapping(categoryCode) = elems(4)
@@ -123,13 +123,12 @@ object naivebayesVectorized {
     }
     println
 
-    // println(g(35, 30, 12))
-
     println("Evaluate Naive Bayes on same dataset picked at random")
-    val testData = Random.shuffle(features.zip(target)).take(5)
-    testData.foreach { t =>
-      val a = t._1
-      val originCat = t._2
+    val testData = Random.shuffle((0 until rowCount).toList).take(15)
+    testData.foreach { testRow =>
+      val a = features(testRow, ::)
+      val originCat = target(testRow, 0)
+
       val output = model.map { x =>
         val cat = x._1
         val count = x._2
@@ -143,9 +142,11 @@ object naivebayesVectorized {
           probXCi *= g(a.get(i), mu.get(i), sigma.get(i))
         }
         (cat, probCi, probXCi, probXCi * probCi)
-      }.maxBy(_._4)
+      }.maxBy(_._4) // find the one with highest probability
 
-      println(output, originCat)
+      println("Classified as: %d,  Original Category: %d".format(output._1.toInt, originCat.toInt))
+      println("Explanation: " + (output, originCat))
+      println
     }
   }
 

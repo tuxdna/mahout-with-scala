@@ -113,9 +113,13 @@ What are the stats almost everyone knows?
  * Vector
  * Matrix
 
+( see the bindings )
+
 ---
 
 # Demo
+
+* Naive Bayes Classifier
 
 ---
 
