@@ -35,14 +35,12 @@ Requirements:
  * A basic understanding of Scala Programming Language
  * Basic mathematics: Probability and Statistics 
 
-
 Duration: 1 hour
 
 ## Posted at
 
 
 [Machine Learning with Apache Mahout and Scala](http://osdconf.in/funnel/osdconf14/8-machine-learning-with-apache-mahout-and-scala)
-
 
 
 ## Some more notes
@@ -129,13 +127,3 @@ examples/bin/classify-20newsgroups.sh
 Fix ./classify-20newsgroups.sh
  * Assumes that `HADOOP_HOME` is set although `HADOOP_HOME` is now deprecated.
  
-
-## SBT integration with Hadoop
-
-Use some SBT magic
-
-
-    $ CP=`sbt "export  compile:dependency-classpath" | tail -1`
-    $ CP_CODE=`pwd`/target/scala-2.9.3/project1_2.9.3-1.0.jar 
-    $ HADOOP_CLASSPATH=$CP:$CP_CODE hadoop utils.MyMainClass
-    Hello0
