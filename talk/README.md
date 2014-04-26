@@ -24,5 +24,5 @@ Install inotify-tools on Ubuntu:
 
 Use inotifywait to invoke rebuild on every change
 
-    $ while inotifywait -e close_write scala-intro.md ; do landslide scala-intro.md --relative --copy-theme -i; done
+    $ while inotifywait -e close_write mahout-scala-talk.md ; do landslide mahout-scala-talk.md --relative --copy-theme -i; done
     
