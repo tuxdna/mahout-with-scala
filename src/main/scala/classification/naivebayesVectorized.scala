@@ -1,5 +1,5 @@
 package classification
-import org.apache.mahout.math.{ Vector => MahoutVector }
+
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable
 import scala.io.Source
@@ -8,18 +8,28 @@ import org.apache.mahout.vectorizer.encoders.Dictionary
 import scala.collection.JavaConversions._
 import scala.util.Random
 import java.net.URL
+import org.apache.mahout.math.{ Vector => MahoutVector }
 
-object naivebayes {
+// Scala DSL for Mahout-Math
+import org.apache.mahout.math.scalabindings._
+import org.apache.mahout.math.DenseMatrix
+import org.apache.mahout.math.Matrix
+import Math.min
+import RLikeOps._
+
+object naivebayesVectorized {
 
   def main(args: Array[String]) {
+
     val irisData = if (args.length > 0) new URL(args(0)) else getClass.getResource("/iris.csv")
 
     // a dictionary for encoding categories
     val dict = new Dictionary()
     val categoryMapping = mutable.Map[Int, String]()
 
-    var features = ArrayBuffer[MahoutVector]()
-    var target = ArrayBuffer[Int]()
+    var featuresBuf = ArrayBuffer[MahoutVector]()
+    var targetBuf = ArrayBuffer[Int]()
+    var rowCount = 0
 
     println("Read data from file: " + irisData)
 
@@ -29,18 +39,27 @@ object naivebayes {
       .filter(_ != null) // skip empty lines
       .map(_.split(",")).filter(_.length == 5) // accept only lines with 5 elements
       .foreach { elems =>
+
         val v: MahoutVector = new DenseVector(5)
         v.set(0, 1) // constant term
-        v.set(1, elems(0).toDouble) //Sepal.Length 
+        v.set(1, elems(0).toDouble) //Sepal.Length
         v.set(2, elems(1).toDouble) //Sepal.Width
         v.set(3, elems(2).toDouble) //Petal.Length
         v.set(4, elems(3).toDouble) //Petal.Width
         val category = elems(4)
         val categoryCode = dict.intern(category)
         categoryMapping(categoryCode) = elems(4)
-        target += categoryCode
-        features += v
+        targetBuf += categoryCode
+        featuresBuf += v
+        rowCount += 1
       }
+
+    val features = new DenseMatrix(rowCount, 5)
+    val target = new DenseMatrix(rowCount, 1)
+    (0 until rowCount) foreach { row =>
+      features(row, ::) = featuresBuf(row)
+      target(row, ::) = dvec(targetBuf(row))
+    }
 
     println("Features and target variable loaded\n")
 
@@ -50,63 +69,43 @@ object naivebayes {
     println
 
     println("Building the NaiveBayes model...")
-    val model = features.zip(target).groupBy(_._2) // group entries by target category
+
+    // group entries by target category
+    val groups = (0 until rowCount).toList.groupBy(row => target(row, 0))
+
+    val model = groups
       .map { x =>
         val category = x._1
-        val featureVectorCategoryPairs = x._2
-        val count = featureVectorCategoryPairs.length
+        val featureRowIds = x._2
+        val count = featureRowIds.length
 
         // calculate stats: sum, mean, variance, sigma (or standard deviation)
-        val sumVector: MahoutVector = new DenseVector(5)
+        val sumVector: MahoutVector = dvec(0, 0, 0, 0, 0)
+        for (row <- featureRowIds) { sumVector += features(row, ::) }
+        val meanVec: MahoutVector = sumVector / count
 
-        featureVectorCategoryPairs.foreach { x =>
-          val featureVector = x._1
-          for (i <- 0 until sumVector.size()) {
-            val xk = sumVector.get(i)
-            sumVector.setQuick(i, xk + featureVector.get(i))
-          }
-        }
-        // println("Sum: " + sumVec)
-
-        val meanVec: MahoutVector = new DenseVector(5)
-        for (i <- 0 until sumVector.size()) {
-          val sumVal = sumVector.get(i)
-          meanVec.setQuick(i, sumVal / count)
-        }
-        // println("Mu: " + muVec)
-
-        val varianceVec: MahoutVector = new DenseVector(5)
         // calculate diff squared sum
-        featureVectorCategoryPairs.foreach { x =>
-          val v = x._1
-          for (i <- 0 until meanVec.size()) {
-            val mu = meanVec.get(i)
-            val xk = v.get(i)
-            val diff = xk - mu
-            val diffSq = diff * diff
-            val variance = varianceVec.get(i) + diffSq
-            varianceVec.setQuick(i, variance)
-          }
+        val diffSquaredSumVec: MahoutVector = new DenseVector(5)
+        featureRowIds.foreach { row =>
+          val v = features(row, ::)
+          val diff = v - meanVec
+          val diffSq = diff * diff
+          diffSquaredSumVec += diffSq
         }
 
-        // divide by N
-        for (i <- 0 until varianceVec.size()) {
-          val variance = varianceVec.get(i) / count
-          varianceVec.setQuick(i, variance)
-        }
+        // variance
+        val varianceVec = diffSquaredSumVec / count
 
-        // println("Variance: " + varianceVec)
-
-        val sigmaVec: MahoutVector = new DenseVector(5)
-        // divide by N
-        for (i <- 0 until varianceVec.size()) {
-          val variance = varianceVec.get(i) / count
-          sigmaVec.setQuick(i, Math.sqrt(variance))
+        // standard deviation
+        val varianceByN: MahoutVector = varianceVec / count
+        val sigmaVec: MahoutVector = varianceByN.cloned
+        for (i <- 0 until varianceByN.size()) {
+          sigmaVec.setQuick(i, Math.sqrt(varianceByN(i)))
         }
 
         // println("Sigma: " + sigmaVec)
 
-        (category, count, count / features.length.toDouble, meanVec, sigmaVec)
+        (category, count, count.toDouble / features.numRows, meanVec, sigmaVec)
       }.toList
 
     println("Generated model is:")

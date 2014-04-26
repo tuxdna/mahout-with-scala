@@ -23,13 +23,13 @@ object ReadSequenceFile {
     val key: WritableComparable[_] = keyObj.asInstanceOf[WritableComparable[_]]
 
     println(keyClass.getName())
-    
+
     val valueClass = reader.getValueClass
     val valueObj = valueClass.newInstance
     val value: Writable = valueObj.asInstanceOf[Writable]
 
     println(valueClass.getName())
-    
+
     val position = reader.getPosition()
 
     while (reader.next(key, value)) {

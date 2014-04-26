@@ -113,9 +113,21 @@ What are the stats almost everyone knows?
  * Vector
  * Matrix
 
+---
 
+# Demo
 
 ---
+
+# What upcoming in Mahout 1.0 ?
+
+* No further development in Map-Reduce ( Hadoop ) style, although existing algorithms will remain.
+* Existing MR algorithms to be ported from MR1 to MR2.
+* All the new algorithms will use Scala Math DSL which can be run seamlessly over Hadoop, Spark or anything else.
+
+---
+
+
 
 # Questions
 
