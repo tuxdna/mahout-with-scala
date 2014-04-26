@@ -123,19 +123,19 @@ What about these?
 ---
 # Classification
 
-![Classification](http://www.holehouse.org/mlclass/06_Logistic_Regression_files/Image%20%5B23%5D.png)
+![Classification](classification.png)
 
 ---
 # Clustering
 
-![Clustering](http://perception.csl.illinois.edu/gpca/introduction/clustering2.gif)
+![Clustering](clustering2.gif)
 
 ---
 # Recommendation Algorithms
 
-![User Based](http://4.bp.blogspot.com/-06YIrYjJ1m4/TmBnFznqoxI/AAAAAAAAAks/HD2vhDWetdg/s1600/P1.png)
+![User Based](user-based.png)
 
-![Item Based](http://2.bp.blogspot.com/-YEEM5PYuTAI/TmHGPmDYICI/AAAAAAAAAls/8VIm0-7PyYM/s1600/P1.png)
+![Item Based](item-based.png)
 
 
 ---
