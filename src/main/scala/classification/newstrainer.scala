@@ -221,7 +221,7 @@ object newstrainer {
   }
 
   def main(args: Array[String]): Unit = {
-    val defaultInput = "/home/saleem/work/learn/external/ml-data/20news/20news-bydate-train"
+    val defaultInput = "/home/tuxdna/work/learn/external/ml-data/20news-bydate-train"
     val base = new File(if (args.length > 0) args(0) else defaultInput)
     val leakType = if (args.length > 1) args(1).toInt else 0
     val newsGroups = new Dictionary()

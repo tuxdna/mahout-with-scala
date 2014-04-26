@@ -1,5 +1,0 @@
-package classification
-
-object sgd {
-
-}

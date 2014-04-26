@@ -52,9 +52,9 @@ what you think.
   }
 
   def parseMailTest() {
-    val fname1 = "/home/saleem/work/learn/external/ml-data/20news/20news-bydate-train/rec.sport.baseball/104596"
-    val fname2 = "/home/saleem/work/learn/external/ml-data/20news/20news-bydate-train/comp.sys.mac.hardware/51916"
-    val fname3 = "/home/saleem/work/learn/external/ml-data/20news/20news-bydate-train/comp.os.ms-windows.misc/9159"
+    val fname1 = "/home/tuxdna/work/learn/external/ml-data/20news-bydate-train/rec.sport.baseball/104596"
+    val fname2 = "/home/tuxdna/work/learn/external/ml-data/20news-bydate-train/comp.sys.mac.hardware/51916"
+    val fname3 = "/home/tuxdna/work/learn/external/ml-data/20news-bydate-train/comp.os.ms-windows.misc/9159"
 
     val file = new File(fname3)
     println(file)

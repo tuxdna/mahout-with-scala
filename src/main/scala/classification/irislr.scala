@@ -10,19 +10,19 @@ import org.apache.mahout.classifier.sgd.OnlineLogisticRegression
 import org.apache.mahout.classifier.sgd.L2
 import java.io.File
 import java.io.PrintStream
+import java.net.URL
 
 object irislr {
 
   def main(args: Array[String]): Unit = {
-    val irisData = if (args.length > 0) args(0)
-    else "/home/saleem/work/learn/mine/mahout-0.9-in-scala/iris.csv"
+    val irisData = if (args.length > 0) new URL(args(0)) else getClass.getResource("/iris.csv")
 
     val dict = new Dictionary()
     var features = ArrayBuffer[MahoutVector]()
     var target = ArrayBuffer[Int]()
     // Read data from file
     // Sepal.Length,Sepal.Width,Petal.Length,Petal.Width,Species
-    Source.fromFile(irisData).getLines().drop(1) // skip header
+    Source.fromURL(irisData).getLines().drop(1) // skip header
       .filter(_ != null).map(_.split(",")).filter(_.length == 5)
       .foreach { elems =>
         val v: MahoutVector = new DenseVector(5)
@@ -51,8 +51,6 @@ object irislr {
     val trainingPasses = 3
 
     for (run <- 0 until totalRuns) {
-      //      println("Run " + run)
-
       // 30 training passes should converge to > 95% accuracy 
       // nearly always but never to 100%
       val lr = new OnlineLogisticRegression(numClasses, numFeatures, new L2(1))
@@ -78,10 +76,6 @@ object irislr {
         val isCorrect = r == target(k)
         numCorrect += (if (isCorrect) 1 else 0)
       }
-
-      //      println(originalCount.toList)
-      //      println(classifyCount.toList)
-
       correct(numCorrect) += 1
     }
 
@@ -92,9 +86,6 @@ object irislr {
     // in all other cases we will get correct(x) > 0 for some x < test.length
     // where correct(x) stores the number of passes
     // verify we never saw worse than 95% correct,
-
-    val output = new File("output.dat")
-    val stream = new PrintStream(output)
 
     val table = (0 until Math.floor(0.99 * test.length).toInt).map { i =>
       val inaccurateTrials = correct(i)
@@ -107,6 +98,8 @@ object irislr {
       (accuracy, inaccurateTrials)
     }
 
+    val output = new File("output.dat")
+    val stream = new PrintStream(output)
     stream.println("accuracy\ttrials")
     table foreach { r =>
       stream.println(r._1 + "\t" + r._2)
