@@ -20,3 +20,8 @@ libraryDependencies += "org.apache.mahout" % "mahout-math-scala" % "0.9"
 
 libraryDependencies += "org.scala-lang" % "scala-library" % "2.9.3"
 
+// required for google guava collections
+// http://stackoverflow.com/questions/10007994/why-do-i-need-jsr305-to-use-guava-in-scala
+// libraryDependencies += "net.sourceforge.findbugs" % "jsr305" % "1.3.7"
+
+libraryDependencies += "com.google.code.findbugs" % "jsr305" % "2.0.3"

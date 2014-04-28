@@ -23,14 +23,46 @@ Run Sala API code to mahout-math ( version 0.9 ) library
 
 Use some SBT magic
 
-    $ CP=`sbt "export  compile:dependency-classpath" | tail -1`
-    $ CP_CODE=`pwd`/target/scala-2.9.3/mahout-with-scala_2.9.3-1.0.jar
-    $ export HADOOP_CLASSPATH=$CP:$CP_CODE
-    
+    $ export HADOOP_CLASSPATH=`sbt "export  compile:full-classpath" | tail -1`:`pwd`/target/scala-2.9.3/mahout-with-scala_2.9.3-1.0.jar
+
 Now that we have HADOOP_CLASSPATH set, we can just invoke `hadoop` and run our code on Hadoop cluster
 
     $ hadoop utils.MyMainClass
     Hello0
+
+### Frequent Patterns Mining
+
+Based on the example [here](http://chimpler.wordpress.com/2013/05/02/finding-association-rules-with-mahout-frequent-pattern-mining/), and re-written in Scala
+
+    $ wget -c "https://sites.google.com/a/nu.edu.pk/tariq-mahmood/teaching-1/fall-12---dm/marketbasket.csv?attredirects=0"
+    $ sbt "run-main fpm.Utils marketbasket.csv"
+	$ hadoop fs -put output.data /
+	
+Lets run the sequential version of FPGrowth
+
+    $ hadoop fpm.fpg -i /output.dat -o /fpg-patterns -k 10 -method sequential -s 2
+    $ hadoop fs -get /fpg-patterns2 fpg-patterns.out
+
+MapReduce version of FPGrowth gives errors:
+	
+This gives errors:
+
+    $ hadoop fpm.fpg -i /output.dat -o /fpg-patterns -k 10 -method mapreduce -s 2
+	... OUTPUT SKIPPED ...
+    Error: java.lang.ClassNotFoundException: com.google.common.collect.Maps
+    	at org.apache.mahout.common.Parameters.parseParams(Parameters.java:92)
+    	at org.apache.mahout.common.Parameters.<init>(Parameters.java:41)
+    	at org.apache.mahout.fpm.pfpgrowth.ParallelCountingMapper.setup(ParallelCountingMapper.java:61)
+    	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1190)
+
+The classpath already contains `guava-16.0.jar`
+
+    $ echo $HADOOP_CLASSPATH | tr ':' '\n' | grep guava
+    /home/saleem/.ivy2/cache/com.google.guava/guava/bundles/guava-16.0.jar
+
+TODO: Fix / resolve this
+
+ * try [this approach](http://stackoverflow.com/questions/10007994/why-do-i-need-jsr305-to-use-guava-in-scala)
 
 ### WordCountAverage
 
